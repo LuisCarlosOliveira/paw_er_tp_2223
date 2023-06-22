@@ -4,6 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// Swagger import
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
 // CORS and Mongoose import
 var cors = require('cors');
 var mongoose = require('mongoose');
@@ -12,6 +16,26 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+// Swagger configuration
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0', 
+    info: {
+      title: 'API de PAW',
+      description: 'Documentação da API',
+      contact: {
+        name: 'Suporte'
+      },
+      servers: ["http://localhost:3000"]
+    }
+  },
+  apis: ["./routes/*.js"]
+};
+
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -55,3 +79,4 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
