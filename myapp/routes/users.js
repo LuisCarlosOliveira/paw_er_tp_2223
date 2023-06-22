@@ -119,4 +119,53 @@ router.put('/:id', userController.update);
  */
 router.delete('/:id', userController.delete);
 
+/**
+ * @swagger
+ * /users/register:
+ *  post:
+ *    description: Use to register a new user
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/User'
+ *    responses:
+ *      '200':
+ *        description: A successful response, returns JWT token
+ *      '500':
+ *        description: An error occurred
+ */
+router.post('/register', userController.create);
+
+/**
+ * @swagger
+ * /users/login:
+ *  post:
+ *    description: Use to login a user
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - username
+ *              - password
+ *            properties:
+ *              username:
+ *                type: string
+ *              password:
+ *                type: string
+ *    responses:
+ *      '200':
+ *        description: A successful response, returns JWT token
+ *      '401':
+ *        description: Unauthorized, invalid username or password
+ *      '500':
+ *        description: An error occurred
+ */
+router.post('/login', userController.login);
+
+
 module.exports = router;
