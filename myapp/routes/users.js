@@ -1,10 +1,16 @@
 var express = require('express');
 var router = express.Router();
 var userController = require('../controllers/userController');
+var authController = require('../controllers/authController');
 
 /**
  * @swagger
  * components:
+ *  securitySchemes:
+ *    BearerAuth:            
+ *      type: http
+ *      scheme: bearer
+ *      bearerFormat: JWT
  *  schemas:
  *    User:
  *      properties:
@@ -27,6 +33,8 @@ var userController = require('../controllers/userController');
  * @swagger
  * /users:
  *  get:
+ *    security:
+ *      - BearerAuth: [] 
  *    description: Use to request all users
  *    responses:
  *      '200':
@@ -38,19 +46,21 @@ var userController = require('../controllers/userController');
  *              items:
  *                $ref: '#/components/schemas/User'
  */
-router.get('/', userController.showAll);
+router.get('/', authController.verifyToken, authController.checkBlocked, userController.showAll);
 
 /**
  * @swagger
  * /users/{id}:
  *  get:
- *    description: Use to request a user by ID
+ *    security:
+ *      - BearerAuth: [] 
+ *    description: Use to request a specific user by ID
  *    parameters:
  *      - name: id
  *        in: path
- *        description: ID of the user to get
  *        required: true
- *        type: string
+ *        schema:
+ *          type: string
  *    responses:
  *      '200':
  *        description: A successful response
@@ -59,15 +69,22 @@ router.get('/', userController.showAll);
  *            schema:
  *              $ref: '#/components/schemas/User'
  */
-router.get('/:id', userController.show);
+router.get('/:id', authController.verifyToken, authController.checkBlocked, userController.show);
 
 /**
  * @swagger
- * /users:
- *  post:
- *    description: Use to create a user
+ * /users/{id}:
+ *  put:
+ *    security:
+ *      - BearerAuth: [] 
+ *    description: Use to update a specific user by ID
+ *    parameters:
+ *      - name: id
+ *        in: path
+ *        required: true
+ *        schema:
+ *          type: string
  *    requestBody:
- *      required: true
  *      content:
  *        application/json:
  *          schema:
@@ -75,49 +92,31 @@ router.get('/:id', userController.show);
  *    responses:
  *      '200':
  *        description: A successful response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/User'
  */
-router.post('/', userController.create);
-
-
-/**
- * @swagger
- * /users/{id}:
- *  put:
- *    description: Use to update a user by ID
- *    parameters:
- *      - name: id
- *        in: path
- *        description: ID of the user to update
- *        required: true
- *        type: string
- *      - name: user
- *        in: body
- *        description: User data to update
- *        required: true
- *        schema:
- *          $ref: '#/components/schemas/User'
- *    responses:
- *      '200':
- *        description: A successful response
- */
-router.put('/:id', userController.update);
+router.put('/:id', authController.verifyToken, authController.checkBlocked, userController.update);
 
 /**
  * @swagger
  * /users/{id}:
  *  delete:
- *    description: Use to delete a user by ID
+ *    security:
+ *      - BearerAuth: [] 
+ *    description: Use to delete a specific user by ID
  *    parameters:
  *      - name: id
  *        in: path
- *        description: ID of the user to delete
  *        required: true
- *        type: string
+ *        schema:
+ *          type: string
  *    responses:
  *      '200':
  *        description: A successful response
  */
-router.delete('/:id', userController.delete);
+router.delete('/:id', authController.verifyToken, authController.checkBlocked, userController.delete);
 
 /**
  * @swagger
@@ -125,18 +124,15 @@ router.delete('/:id', userController.delete);
  *  post:
  *    description: Use to register a new user
  *    requestBody:
- *      required: true
  *      content:
  *        application/json:
  *          schema:
  *            $ref: '#/components/schemas/User'
  *    responses:
  *      '200':
- *        description: A successful response, returns JWT token
- *      '500':
- *        description: An error occurred
+ *        description: A successful response
  */
-router.post('/register', userController.create);
+router.post('/register', authController.register);
 
 /**
  * @swagger
@@ -144,28 +140,37 @@ router.post('/register', userController.create);
  *  post:
  *    description: Use to login a user
  *    requestBody:
- *      required: true
  *      content:
  *        application/json:
  *          schema:
- *            type: object
- *            required:
- *              - username
- *              - password
- *            properties:
- *              username:
- *                type: string
- *              password:
- *                type: string
+ *            $ref: '#/components/schemas/User'
  *    responses:
  *      '200':
- *        description: A successful response, returns JWT token
- *      '401':
- *        description: Unauthorized, invalid username or password
- *      '500':
- *        description: An error occurred
+ *        description: A successful response
  */
-router.post('/login', userController.login);
+router.post('/login', authController.login);
 
+/**
+ * @swagger
+ * /users/username/{username}:
+ *  get:
+ *    security:
+ *      - BearerAuth: [] 
+ *    description: Use to request a specific user by username
+ *    parameters:
+ *      - name: username
+ *        in: path
+ *        required: true
+ *        schema:
+ *          type: string
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/User'
+ */
+router.get('/username/:username', authController.verifyToken, authController.checkBlocked, userController.showByUsername);
 
 module.exports = router;

@@ -1,9 +1,9 @@
-var mongoose = require('mongoose');
-var User = require('../models/User');
-var jwt = require('jsonwebtoken');
-var config = require('../jwt_secret/config');
+const mongoose = require('mongoose');
+const User = require('../models/User');
+const jwt = require('jsonwebtoken');
+const config = require('../jwt_secret/config');
 
-var userController = {};
+const userController = {};
 
 // mostra todos os utilizadores
 userController.showAll = function(req, res) {
@@ -15,7 +15,7 @@ userController.showAll = function(req, res) {
             res.json(users);
         }
     });
-}
+};
 
 // mostra um utilizador por ID
 userController.show = function(req, res) {
@@ -27,19 +27,60 @@ userController.show = function(req, res) {
             res.json(user);
         }
     });
-}
+};
 
 // atualiza um utilizador
 userController.update = function(req, res) {
-    User.findByIdAndUpdate(req.params.id, req.body, { new: true }).exec((err, updatedUser) => {
+    const decoded = jwt.verify(req.headers['x-access-token'], config.secret);
+    User.findOne({ _id: decoded.id }, function(err, user) {
         if (err) {
             console.log('Erro a atualizar');
             res.status(500).send(err);
         } else {
-            res.json(updatedUser);
+            if (user.role == 'admin') {
+                // Only an admin can change the role of any user to 'admin', 'moderator' or 'user'.
+                User.findByIdAndUpdate(req.params.id, req.body, { new: true }).exec((err, updatedUser) => {
+                    if (err) {
+                        console.log('Erro a atualizar');
+                        res.status(500).send(err);
+                    } else {
+                        res.json(updatedUser);
+                    }
+                });
+            } else if (user.role == 'moderator') {
+                // A moderator can only change the role of a user to 'moderator'.
+                if (req.body.role && req.body.role != 'moderator') {
+                    delete req.body.role;
+                }
+                User.findByIdAndUpdate(req.params.id, req.body, { new: true }).exec((err, updatedUser) => {
+                    if (err) {
+                        console.log('Erro a atualizar');
+                        res.status(500).send(err);
+                    } else {
+                        res.json(updatedUser);
+                    }
+                });
+            } else {
+                // A 'user' can only change their own information and cannot change their 'role' or anyone else's.
+                if (req.params.id == decoded.id) {
+                    if (req.body.role) {
+                        delete req.body.role; // Remove 'role' property if it exists in the request body.
+                    }
+                    User.findByIdAndUpdate(req.params.id, req.body, { new: true }).exec((err, updatedUser) => {
+                        if (err) {
+                            console.log('Erro a atualizar');
+                            res.status(500).send(err);
+                        } else {
+                            res.json(updatedUser);
+                        }
+                    });
+                } else {
+                    res.status(403).send('Você não tem permissão para atualizar outros usuários.');
+                }
+            }
         }
     });
-}
+};
 
 // apaga um utilizador
 userController.delete = function(req, res) {
@@ -51,43 +92,19 @@ userController.delete = function(req, res) {
             res.json({ message: 'Utilizador apagado com sucesso!' });
         }
     });
-}
+};
 
-// cria um novo utilizador
-userController.create = function(req, res) {
-    var user = new User(req.body);
-    user.save((err, savedUser) => {
+// get utilizador pelo username
+userController.showByUsername = function(req, res) {
+    User.findOne({username: req.params.username}).exec((err, user) => {
         if (err) {
-            console.log('Erro a gravar');
+            console.log('Erro a ler');
             res.status(500).send(err);
         } else {
-            var token = jwt.sign({ id: savedUser._id }, config.secret, {
-                expiresIn: 86400 // expires in 24 hours
-            });
-            res.status(200).send({ auth: true, token: token });
+            res.json(user);
         }
     });
 };
 
-userController.login = function(req, res) {
-    User.findOne({ username: req.body.username }, function(err, user) {
-        if (err) return res.status(500).send('Error on the server.');
-        if (!user) return res.status(404).send('No user found.');
-
-        user.comparePassword(req.body.password, function(err, isMatch) {
-            if (err) throw err;
-
-            if (!isMatch) return res.status(401).send({ auth: false, token: null });
-
-            var token = jwt.sign({ id: user._id }, config.secret, {
-                expiresIn: 86400 // expires in 24 hours
-            });
-
-            res.status(200).send({ auth: true, token: token });
-        });
-    });
-};
-
-
-
 module.exports = userController;
+
