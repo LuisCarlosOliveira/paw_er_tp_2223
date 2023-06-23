@@ -1,23 +1,25 @@
 const express = require('express');
 const router = express.Router();
-const courseController = require('../controllers/courseController');
+const subjectController = require('../controllers/subjectController');
 const authController = require('../controllers/authController');
 
 /**
  * @swagger
  * components:
  *   schemas:
- *     Course:
+ *     Subject:
  *       properties:
  *         name:
+ *           type: string
+ *         course:
  *           type: string
  */
 
 /**
  * @swagger
- * /courses:
+ * /subjects:
  *   get:
- *     description: Use to request all courses
+ *     description: Use to request all subjects
  *     responses:
  *       '200':
  *         description: A successful response
@@ -26,15 +28,15 @@ const authController = require('../controllers/authController');
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Course'
+ *                 $ref: '#/components/schemas/Subject'
  */
-router.get('/', courseController.showAll);
+router.get('/', subjectController.showAll);
 
 /**
  * @swagger
- * /courses/{id}:
+ * /subjects/{id}:
  *   get:
- *     description: Use to request a specific course by ID
+ *     description: Use to request a specific subject by ID
  *     parameters:
  *       - name: id
  *         in: path
@@ -47,17 +49,17 @@ router.get('/', courseController.showAll);
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Course'
+ *               $ref: '#/components/schemas/Subject'
  */
-router.get('/:id', courseController.read);
+router.get('/:id', subjectController.read);
 
 /**
  * @swagger
- * /courses/name/{name}:
+ * /subjects/course/{courseId}:
  *   get:
- *     description: Use to request a specific course by name
+ *     description: Use to request all subjects of a specific course
  *     parameters:
- *       - name: name
+ *       - name: courseId
  *         in: path
  *         required: true
  *         schema:
@@ -68,39 +70,44 @@ router.get('/:id', courseController.read);
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Course'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Subject'
  */
-router.get('/name/:name', courseController.showByName);
+router.get('/course/:courseId', subjectController.showByCourse);
 
 /**
  * @swagger
- * /courses/create:
+ * /subjects:
  *   post:
  *     security:
  *       - BearerAuth: []
- *     description: Use to create a course
+ *     description: Use to create a subject
  *     requestBody:
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Course'
+ *             $ref: '#/components/schemas/Subject'
+ *           example:
+ *             name: Subject Name
+ *             course: Course ID
  *     responses:
  *       '200':
  *         description: A successful response
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Course'
+ *               $ref: '#/components/schemas/Subject'
  */
-router.post('/create', authController.verifyToken, authController.checkUserRole(['admin']), courseController.create);
+router.post('/', authController.verifyToken, authController.checkUserRole(['admin']), subjectController.create);
 
 /**
  * @swagger
- * /courses/update/{id}:
+ * /subjects/{id}:
  *   put:
  *     security:
  *       - BearerAuth: []
- *     description: Use to update a course
+ *     description: Use to update a subject
  *     parameters:
  *       - name: id
  *         in: path
@@ -111,24 +118,24 @@ router.post('/create', authController.verifyToken, authController.checkUserRole(
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Course'
+ *             $ref: '#/components/schemas/Subject'
  *     responses:
  *       '200':
  *         description: A successful response
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Course'
+ *               $ref: '#/components/schemas/Subject'
  */
-router.put('/update/:id', authController.verifyToken, authController.checkUserRole(['admin']), courseController.update);
+router.put('/:id', authController.verifyToken, authController.checkUserRole(['admin']), subjectController.update);
 
 /**
  * @swagger
- * /courses/delete/{id}:
+ * /subjects/{id}:
  *   delete:
  *     security:
  *       - BearerAuth: []
- *     description: Use to delete a course
+ *     description: Use to delete a subject
  *     parameters:
  *       - name: id
  *         in: path
@@ -139,6 +146,7 @@ router.put('/update/:id', authController.verifyToken, authController.checkUserRo
  *       '200':
  *         description: A successful response
  */
-router.delete('/delete/:id', authController.verifyToken, authController.checkUserRole(['admin']), courseController.delete);
+router.delete('/:id', authController.verifyToken, authController.checkUserRole(['admin']), subjectController.delete);
 
 module.exports = router;
+
