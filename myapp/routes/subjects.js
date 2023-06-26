@@ -17,6 +17,21 @@ const authController = require('../controllers/authController');
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     Subject:
+ *       properties:
+ *         name:
+ *           type: string
+ *         courses:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: An array of course IDs
+ */
+
+/**
+ * @swagger
  * /subjects:
  *   get:
  *     description: Use to request all subjects
@@ -78,7 +93,7 @@ router.get('/course/:courseId', subjectController.showByCourse);
 
 /**
  * @swagger
- * /subjects:
+ * /subjects/create:
  *   post:
  *     security:
  *       - BearerAuth: []
@@ -90,7 +105,7 @@ router.get('/course/:courseId', subjectController.showByCourse);
  *             $ref: '#/components/schemas/Subject'
  *           example:
  *             name: Subject Name
- *             course: Course ID
+ *             courses: [Course ID 1, Course ID 2]
  *     responses:
  *       '200':
  *         description: A successful response
@@ -99,7 +114,7 @@ router.get('/course/:courseId', subjectController.showByCourse);
  *             schema:
  *               $ref: '#/components/schemas/Subject'
  */
-router.post('/', authController.verifyToken, authController.checkUserRole(['admin']), subjectController.create);
+router.post('/create', authController.verifyToken, authController.checkUserRole(['admin']), subjectController.create);
 
 /**
  * @swagger
@@ -147,6 +162,30 @@ router.put('/:id', authController.verifyToken, authController.checkUserRole(['ad
  *         description: A successful response
  */
 router.delete('/:id', authController.verifyToken, authController.checkUserRole(['admin']), subjectController.delete);
+
+/**
+ * @swagger
+ * /courses/{courseId}/subjects/{subjectId}:
+ *   put:
+ *     security:
+ *       - BearerAuth: []
+ *     description: Use to add a subject to a course
+ *     parameters:
+ *       - name: courseId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - name: subjectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: A successful response
+ */
+router.put('/courses/:courseId/subjects/:subjectId', authController.verifyToken, authController.checkUserRole(['admin']), subjectController.addSubjectToCourse);
 
 module.exports = router;
 

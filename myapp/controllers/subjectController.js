@@ -7,29 +7,31 @@ const subjectController = {};
 subjectController.create = function(req, res) {
     const subject = new Subject();
     subject.name = req.body.name;
+    subject.courses = req.body.courses;
     
-    // Encontrar o Course com base no ID recebido em req.body.course
-    Course.findById(req.body.course, function(err, course) {
+    subject.save((err, savedSubject) => {
       if (err) {
-        console.log('Error finding course:', err);
+        console.log('Error on save!');
         res.status(500).send(err);
-      } else if (!course) {
-        res.status(404).send('Course not found');
       } else {
-        // Atribui a referência ao campo course do Subject
-        subject.course = course._id;
-    
-        subject.save((err, savedSubject) => {
-          if (err) {
-            console.log('Error on save!');
-            res.status(500).send(err);
-          } else {
-            res.status(200).send({ subject: savedSubject });
+        // update the course(s) to reference this subject
+        Course.updateMany(
+          { _id: { $in: req.body.courses } },
+          { $push: { subjects: savedSubject._id } },
+          function(err) {
+            if (err) {
+              console.log('Error updating courses:', err);
+              res.status(500).send(err);
+            } else {
+              res.status(200).send({ subject: savedSubject });
+            }
           }
-        });
+        );
       }
     });
   };
+  
+
   
 
 // Read Subject
@@ -98,4 +100,49 @@ subjectController.showByCourse = function(req, res) {
     console.log('After querying subjects for course');
 };
 
+
+// Add Subject to Course
+subjectController.addSubjectToCourse = function(req, res) {
+    const courseId = req.params.courseId;
+    const subjectId = req.params.subjectId;
+    
+    Course.findById(courseId, function(err, course) {
+      if (err) {
+        console.log('Error finding course:', err);
+        res.status(500).send(err);
+      } else if (!course) {
+        res.status(404).send('Course not found');
+      } else {
+        course.subjects.push(subjectId);
+        course.save(function(err, updatedCourse) {
+          if (err) {
+            console.log('Error updating course:', err);
+            res.status(500).send(err);
+          } else {
+            Subject.findById(subjectId, function(err, subject) {
+              if (err) {
+                console.log('Error finding subject:', err);
+                res.status(500).send(err);
+              } else if (!subject) {
+                res.status(404).send('Subject not found');
+              } else {
+                subject.courses.push(courseId);
+                subject.save(function(err, updatedSubject) {
+                  if (err) {
+                    console.log('Error updating subject:', err);
+                    res.status(500).send(err);
+                  } else {
+                    res.status(200).send({ course: updatedCourse, subject: updatedSubject });
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  };
+  
+
 module.exports = subjectController;
+

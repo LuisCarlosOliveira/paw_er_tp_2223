@@ -143,7 +143,15 @@ router.post('/register', authController.register);
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/User'
+ *            type: object
+ *            properties:
+ *              username:
+ *                type: string
+ *              password:
+ *                type: string
+ *            required:
+ *              - username
+ *              - password
  *    responses:
  *      '200':
  *        description: A successful response
