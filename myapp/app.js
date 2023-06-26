@@ -17,6 +17,8 @@ var usersRouter = require('./routes/users');
 var coursesRouter = require('./routes/courses');
 var subjectsRouter = require('./routes/subjects'); 
 var threadsRouter = require('./routes/threads');
+var postsRouter = require('./routes/posts');
+var searchesRouter = require('./routes/searches');
 
 var app = express();
 
@@ -36,7 +38,6 @@ const swaggerOptions = {
   apis: ["./routes/*.js"]
 };
 
-
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
@@ -48,6 +49,8 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // CORS for routes
 app.use(cors());
@@ -67,6 +70,8 @@ app.use('/users', usersRouter);
 app.use('/courses', coursesRouter); 
 app.use('/subjects', subjectsRouter);
 app.use('/threads', threadsRouter);
+app.use('/posts', postsRouter);
+app.use('/searches', searchesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

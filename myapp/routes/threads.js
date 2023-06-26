@@ -1,7 +1,9 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var threadController = require('../controllers/threadController');
-var authController = require('../controllers/authController');
+var threadController = require("../controllers/threadController");
+var authController = require("../controllers/authController");
+var multer = require("multer");
+var upload = multer({ dest: "uploads/" });
 
 /**
  * @swagger
@@ -22,6 +24,17 @@ var authController = require('../controllers/authController');
  * /threads:
  *   get:
  *     description: Use to request all threads
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: integer
+ *       - name: limit
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: integer
  *     responses:
  *       '200':
  *         description: A successful response
@@ -32,7 +45,7 @@ var authController = require('../controllers/authController');
  *               items:
  *                 $ref: '#/components/schemas/Thread'
  */
-router.get('/', threadController.showAll);
+router.get("/", threadController.showAll);
 
 /**
  * @swagger
@@ -53,7 +66,7 @@ router.get('/', threadController.showAll);
  *             schema:
  *               $ref: '#/components/schemas/Thread'
  */
-router.get('/:id', threadController.show);
+router.get("/:id", threadController.show);
 
 /**
  * @swagger
@@ -64,14 +77,28 @@ router.get('/:id', threadController.show);
  *     description: Use to create a thread
  *     requestBody:
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Thread'
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *               course:
+ *                 type: string
+ *               subject:
+ *                 type: string
+ *               attachment:
+ *                 type: string
+ *                 format: binary
  *           example:
  *             title: Thread Title
  *             content: Thread Content
  *             course: Course ID
  *             subject: Subject ID
+ *             attachment:
+ *               $ref: 'path/to/your/file'
  *     responses:
  *       '200':
  *         description: A successful response
@@ -80,12 +107,13 @@ router.get('/:id', threadController.show);
  *             schema:
  *               $ref: '#/components/schemas/Thread'
  */
-
-router.post('/', 
-    authController.verifyToken, 
-    authController.checkBlocked, 
-    authController.checkUserRole(['user', 'moderator', 'admin']), 
-    threadController.create
+router.post(
+  "/",
+  authController.verifyToken,
+  authController.checkBlocked,
+  authController.checkUserRole(["user", "moderator", "admin"]),
+  upload.single("attachment"), // middleware do multer adicionado aqui
+  threadController.create
 );
 
 /**
@@ -105,16 +133,17 @@ router.post('/',
  *       '200':
  *         description: A successful response
  */
-router.delete('/:id', 
-    authController.verifyToken, 
-    authController.checkBlocked, 
-    authController.checkUserRole(['user', 'moderator', 'admin']), 
-    threadController.delete
+router.delete(
+  "/:id",
+  authController.verifyToken,
+  authController.checkBlocked,
+  authController.checkUserRole(["user", "moderator", "admin"]),
+  threadController.delete
 );
 
 /**
  * @swagger
- * /threads/{id}:
+ * /threads/{id}/hide:
  *   put:
  *     security:
  *       - BearerAuth: []
@@ -133,11 +162,60 @@ router.delete('/:id',
  *             schema:
  *               $ref: '#/components/schemas/Thread'
  */
-router.put('/:id', 
-    authController.verifyToken, 
-    authController.checkBlocked, 
-    authController.checkUserRole(['user', 'moderator', 'admin']), 
-    threadController.hide
+router.put(
+  "/:id/hide",
+  authController.verifyToken,
+  authController.checkBlocked,
+  authController.checkUserRole(["user", "moderator", "admin"]),
+  threadController.hide
+);
+
+/**
+ * @swagger
+ * /threads/{id}/edit:
+ *   put:
+ *     security:
+ *       - BearerAuth: []
+ *     description: Use to edit a thread
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *               attachment:
+ *                 type: string
+ *                 format: binary
+ *           example:
+ *             title: Updated Title
+ *             content: Updated Content
+ *             attachment:
+ *               $ref: 'path/to/your/file'
+ *     responses:
+ *       '200':
+ *         description: A successful response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Thread'
+ */
+router.put(
+  "/:id/edit",
+  authController.verifyToken,
+  authController.checkBlocked,
+  authController.checkUserRole(["user", "moderator", "admin"]),
+  upload.single("attachment"), // multer middleware added here
+  threadController.edit
 );
 
 module.exports = router;
