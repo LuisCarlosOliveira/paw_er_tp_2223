@@ -53,7 +53,10 @@ app.use(cookieParser());
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // CORS for routes
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:4200',
+  credentials: true
+}));
 
 //  MongoDB connection
 //useNewUrlParser: new MongoDB driver connection string parser
@@ -90,4 +93,5 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
 
