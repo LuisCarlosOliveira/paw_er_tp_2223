@@ -19,7 +19,6 @@ export class LoginComponent implements OnInit {
   login(): void {
     this.authService.login(this.username, this.password).subscribe(
       success => {
-        this.authService.storeToken(success.token);
         // redirecionar para a página principal, adicionar seu próprio código aqui
       },
       error => {
@@ -29,4 +28,3 @@ export class LoginComponent implements OnInit {
   }
 
 }
-

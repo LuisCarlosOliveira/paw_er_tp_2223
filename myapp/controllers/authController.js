@@ -22,7 +22,7 @@ authController.login = function(req, res, next) {
                     expiresIn: 86400 // expires in 24 hours
                 });
 
-                res.status(200).send({ auth: true, token: token });
+                res.status(200).send({ auth: true, token: token, role: user.role });
             });
         })
         .catch(function(err){
@@ -31,9 +31,6 @@ authController.login = function(req, res, next) {
 };
 
 authController.register = function(req, res, next) {
-    const hashedPassword = bcrypt.hashSync(req.body.password, 8);
-    req.body.password = hashedPassword;
-
     var user = new User(req.body);
 
     user.save((err, savedUser) => {
@@ -44,10 +41,11 @@ authController.register = function(req, res, next) {
             var token = jwt.sign({ id: savedUser._id, role: savedUser.role }, config.secret, {
                 expiresIn: 86400 // expires in 24 hours
             });
-            res.status(200).send({ auth: true, token: token });
+            res.status(200).send({ auth: true, token: token, role: savedUser.role });
         }
     });
 };
+
 
 authController.verifyToken = function(req, res, next) {
     let token = req.headers['authorization'];

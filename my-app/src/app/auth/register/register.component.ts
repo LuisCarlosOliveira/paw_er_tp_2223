@@ -22,7 +22,6 @@ export class RegisterComponent implements OnInit {
         // login após o registro bem-sucedido
         this.authService.login(this.username, this.password).subscribe(
           success => {
-            this.authService.storeToken(success.token);
             // redirecionar para a página principal, adicionar seu próprio código aqui
           }
         );
@@ -34,4 +33,5 @@ export class RegisterComponent implements OnInit {
   }
 
 }
+
 
