@@ -2,10 +2,16 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 
 import { AppComponent } from './app.component';
 
-import { AuthService } from './auth/auth.service';
+import { AuthService } from './services/auth.service';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 
@@ -15,20 +21,20 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { CourseService } from './services/course.service';
 import { CourseListComponent } from './courses/course-list/course-list.component';
-import { CourseDetailsComponent } from './courses/course-details/course-details.component';
+import { CourseDetailComponent } from './courses/course-details/course-details.component';
 
 
 import { SubjectService } from './services/subject.service';
 import { SubjectListComponent } from './subjects/subject-list/subject-list.component';
 import { SubjectDetailsComponent } from './subjects/subject-details/subject-details.component';
 
-import { ThreadsService } from './threads/threads.service';
+import { ThreadService } from './services/thread.service';
 import { ThreadListComponent } from './threads/thread-list/thread-list.component';
 import { ThreadDetailComponent } from './threads/thread-detail/thread-detail.component';
 import { CreateThreadComponent } from './threads/create-thread/create-thread.component';
 import { EditThreadComponent } from './threads/edit-thread/edit-thread.component';
 
-import { PostsService } from './posts/posts.service';
+import { PostService } from './services/post.service';
 import { PostListComponent } from './posts/post-list/post-list.component';
 import { PostDetailComponent } from './posts/post-detail/post-detail.component';
 import { CreatePostComponent } from './posts/create-post/create-post.component';
@@ -45,6 +51,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { CourseCreateComponent } from './courses/course-create/course-create.component';
 import { CourseUpdateComponent } from './courses/course-update/course-update.component';
 import { SubjectCreateComponent } from './subjects/subject-create/subject-create.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -54,7 +61,7 @@ import { SubjectCreateComponent } from './subjects/subject-create/subject-create
     NavbarComponent,
     DashboardComponent,
     CourseListComponent,
-    CourseDetailsComponent,
+    CourseDetailComponent,
     SubjectListComponent,
     SubjectDetailsComponent,
     ThreadListComponent,
@@ -76,14 +83,21 @@ import { SubjectCreateComponent } from './subjects/subject-create/subject-create
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    RouterModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatIconModule,
+    BrowserAnimationsModule
   ],
   providers: [
     AuthService,
     CourseService,
     SubjectService,
-    ThreadsService,
-    PostsService,
+    ThreadService,
+    PostService,
     //AdminService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],

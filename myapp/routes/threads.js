@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var threadController = require("../controllers/threadController");
 var authController = require("../controllers/authController");
+var postController = require("../controllers/postController");
 var multer = require("multer");
 var upload = multer({ dest: "uploads/" });
 
@@ -17,7 +18,18 @@ var upload = multer({ dest: "uploads/" });
  *           type: string
  *         creator:
  *           type: string
+ *     Post:
+ *       properties:
+ *         postId:
+ *           type: string
+ *         content:
+ *           type: string
+ *         threadId:
+ *           type: string
+ *         creator:
+ *           type: string
  */
+
 
 /**
  * @swagger
@@ -162,7 +174,7 @@ router.delete(
  *             schema:
  *               $ref: '#/components/schemas/Thread'
  */
-router.put(
+router.post(
   "/:id/hide",
   authController.verifyToken,
   authController.checkBlocked,
@@ -217,5 +229,31 @@ router.put(
   upload.single("attachment"), // multer middleware added here
   threadController.edit
 );
+
+router.get("/subjects/:subjectId", threadController.showBySubject);
+
+/**
+ * @swagger
+ * /threads/{id}/posts:
+ *   get:
+ *     description: Use to request all posts from a specific thread by ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: A successful response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Post'  
+ */
+router.get("/:id/posts", postController.showByThread);
+
 
 module.exports = router;

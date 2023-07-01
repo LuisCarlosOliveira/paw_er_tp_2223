@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth/auth.service'
+import { AuthService } from '../services/auth.service'
 
 
 @Component({
@@ -8,12 +8,25 @@ import { AuthService } from '../auth/auth.service'
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  currentUser: any;
+  isLoggedIn: boolean = false;
+  role: string = '';
+  username: string = '';
+
 
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.authService.currentUser.subscribe((user: any) => this.currentUser = user);
+    this.authService.currentUser.subscribe(user => {
+      if(user) {
+        this.isLoggedIn = true;
+        this.role = user.role;
+        this.username = user.username;
+      } else {
+        this.isLoggedIn = false;
+        this.role = '';
+        this.username = '';
+      }
+    });
   }
 
   logout() {

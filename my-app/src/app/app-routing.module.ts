@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuardService } from './auth/auth-guard.service';
+import { AuthGuardService } from './services/auth-guard.service';
 
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
@@ -17,7 +17,7 @@ import { CreatePostComponent } from './posts/create-post/create-post.component';
 import { EditPostComponent } from './posts/edit-post/edit-post.component';
 
 import { CourseListComponent } from './courses/course-list/course-list.component';
-import { CourseDetailsComponent } from './courses/course-details/course-details.component';
+import { CourseDetailComponent } from './courses/course-details/course-details.component';
 import { CourseCreateComponent  } from './courses/course-create/course-create.component';
 import { CourseUpdateComponent   } from './courses/course-update/course-update.component';
 
@@ -36,7 +36,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
 
   { path: 'threads', component: ThreadListComponent },
-  { path: 'thread/:id', component: ThreadDetailComponent, canActivate: [AuthGuardService] },
+  { path: 'thread/:id', component: ThreadDetailComponent},
   { path: 'create-thread', component: CreateThreadComponent, canActivate: [AuthGuardService] },
   { path: 'thread/:id/edit', component: EditThreadComponent, canActivate: [AuthGuardService] },
 
@@ -46,13 +46,13 @@ const routes: Routes = [
   { path: 'post/:id/edit', component: EditPostComponent, canActivate: [AuthGuardService] },
 
   { path: 'courses', component: CourseListComponent },
-  { path: 'course/:id', component: CourseDetailsComponent, canActivate: [AuthGuardService] },
-  { path: 'courses/create', component: CourseCreateComponent },
+  { path: 'courses/:id', component: CourseDetailComponent},
+  { path: 'courses/create', component: CourseCreateComponent, canActivate: [AuthGuardService] },
   { path: 'courses/update/:id', component: CourseUpdateComponent },
 
-  { path: 'subjects/create', component: SubjectCreateComponent },
+  { path: 'subjects/create', component: SubjectCreateComponent , canActivate: [AuthGuardService] },
   { path: 'subjects', component: SubjectListComponent },
-  { path: 'subject/:id', component: SubjectDetailsComponent, canActivate: [AuthGuardService] },
+  { path: 'subject/:id', component: SubjectDetailsComponent },
 
   { path: 'search', component: SearchComponent },
 

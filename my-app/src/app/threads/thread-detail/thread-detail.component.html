@@ -1,1 +1,93 @@
-<p>thread-detail works!</p>
+<div *ngIf="thread" class="thread-details">
+  <div class="thread-header">
+    <h2 class="thread-title-centered">{{ thread.title }}</h2>
+    <p *ngIf="thread.attachments" class="thread-attachments">Attachments: {{ thread.attachments }}</p>
+  </div>
+  <p class="thread-content">{{ thread.content }}</p>
+  <ul *ngIf="posts && posts.length > 0">
+    <li *ngFor="let post of posts" class="post-item">
+      <div
+        class="post-box"
+        *ngIf="!post.hidden || isPostCreator(post) || isModeratorOrAdmin()"
+        [ngClass]="{ 'hidden-post': post.hidden }"
+      >
+        <h4>{{ post.createdAt }}</h4>
+        <p>{{ post._id }}</p>
+        <p>Autor: {{ post.creator }}</p>
+        <p>{{ post.content }}</p>
+        <ul>
+          <li *ngFor="let attachment of post.attachments">
+            <a
+              [href]="downloadFile(attachment.file, attachment.name)"
+              download="{{ attachment.name }}"
+              >Download {{ attachment.name }}</a
+            >
+          </li>
+        </ul>
+        <!-- Voting section -->
+        <div
+          *ngIf="canVote(post) && !isPostCreator(post)"
+          class="voting-section"
+        >
+          <button mat-icon-button color="accent" (click)="upvotePost(post)">
+            <mat-icon>keyboard_arrow_up</mat-icon>
+          </button>
+          <span>{{ post.upvotes }}</span>
+          <button mat-icon-button color="warn" (click)="downvotePost(post)">
+            <mat-icon>keyboard_arrow_down</mat-icon>
+          </button>
+          <span>{{ post.downvotes }}</span>
+        </div>
+        
+        <button
+          *ngIf="isPostCreator(post)"
+          mat-raised-button
+          color="accent"
+          (click)="editPost(post)"
+        >
+          Edit
+        </button>
+        <button *ngIf="isPostCreator(post) || isModeratorOrAdmin()" mat-raised-button color="warn" (click)="deletePost(post)">
+          Delete
+        </button>
+        <button
+          *ngIf="isPostCreator(post) || isModeratorOrAdmin()"
+          mat-raised-button
+          (click)="toggleHidePost(post)"
+        >
+          {{ post.hidden ? "Show" : "Hide" }}
+        </button>
+      </div>
+    </li>
+  </ul>
+  <p *ngIf="!posts || posts.length === 0">
+    No posts available for this thread.
+  </p>
+
+  <div *ngIf="isLoggedIn && canCreatePost" class="add-post-section">
+    <h3>Add a new post</h3>
+    <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+      <div>
+        <mat-form-field>
+          <mat-label>Content</mat-label>
+          <textarea matInput formControlName="content"></textarea>
+        </mat-form-field>
+      </div>
+      <div>
+        <div>
+          <label for="attachments">Attachments</label>
+          <input type="file" id="attachments" (change)="onFileChange($event)" />
+        </div>
+      </div>
+      <button
+        mat-raised-button
+        color="basic"
+        type="submit"
+        [disabled]="postForm.invalid"
+      >
+        Submit
+      </button>
+    </form>
+  </div>
+</div>
+<button mat-raised-button (click)="goBack()">Back</button>

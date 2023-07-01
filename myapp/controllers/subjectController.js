@@ -86,19 +86,20 @@ subjectController.showAll = function(req, res) {
 
 // Show Subjects for a specific Course
 subjectController.showByCourse = function(req, res) {
-    var courseId = req.params.courseId;
-    console.log('Before querying subjects for course');
-    Subject.find({course: courseId}, function(err, subjects) {
-        if (err) {
-            console.log('Error querying subjects:', err);
-            res.status(500).send(err);
-        } else {
-            console.log('Subjects:', subjects);
-            res.status(200).send(subjects);
-        }
-    });
-    console.log('After querying subjects for course');
+  var courseId = req.params.courseId;
+  console.log('Before querying subjects for course');
+  Subject.find({courses: courseId}, function(err, subjects) {
+      if (err) {
+          console.log('Error querying subjects:', err);
+          res.status(500).send(err);
+      } else {
+          console.log('Subjects:', subjects);
+          res.status(200).send(subjects);
+      }
+  });
+  console.log('After querying subjects for course');
 };
+
 
 
 // Add Subject to Course

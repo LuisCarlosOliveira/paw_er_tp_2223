@@ -1,1 +1,15 @@
-<p>edit-post works!</p>
+<h1>Edit Post</h1>
+
+<form [formGroup]="editPostForm" (ngSubmit)="onSubmit()">
+  <mat-form-field>
+    <mat-label>Content</mat-label>
+    <textarea matInput formControlName="content"></textarea>
+  </mat-form-field>
+
+  <div>
+    <label for="attachments">Attachments</label>
+    <input type="file" id="attachments" formControlName="attachments">
+  </div>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="editPostForm.invalid">Update</button>
+</form>

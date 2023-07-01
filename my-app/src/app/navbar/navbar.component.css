@@ -1,0 +1,9 @@
+.nav-item {
+    margin-right: 20px;
+  }
+  
+  .container-fluid {
+    display: flex;
+    justify-content: space-between;
+  }
+  

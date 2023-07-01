@@ -1,1 +1,20 @@
-<p>thread-list works!</p>
+<div *ngIf="threads.length">
+  <div *ngFor="let thread of threads">
+    <h2>{{ thread.title }}</h2>
+    <p>{{ thread.content }}</p>
+    <p>Creator ID: {{ thread.creator }}</p>
+    <button
+      *ngIf="
+        thread._id &&
+        thread.creator &&
+        authService.canDeleteThread(thread.creator)
+      "
+      (click)="deleteThread(thread._id)"
+    >
+      Delete
+    </button>
+  </div>
+</div>
+<div *ngIf="!threads.length">
+  <p>No threads found</p>
+</div>

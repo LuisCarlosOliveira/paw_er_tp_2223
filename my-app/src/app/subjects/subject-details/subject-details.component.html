@@ -1,1 +1,59 @@
-<p>subject-details works!</p>
+<div *ngIf="subject">
+  <h2>{{ subject.name }}</h2>
+
+  <ul *ngIf="threads && threads.length > 0" class="threads-list">
+    <li *ngFor="let thread of threads" class="thread-item" matRipple>
+      <div class="thread-box">
+        <a mat-button (click)="navigateToThread(thread)">{{ thread.title }}</a>
+
+        <button
+          *ngIf="canHideThread(thread)"
+          mat-button
+          (click)="thread._id && hideThread(thread)"
+        >
+          {{ thread.hidden ? "Show" : "Hide" }}
+        </button>
+        <button
+          *ngIf="canDeleteThread(thread)"
+          mat-button
+          (click)="thread._id && deleteThread(thread)"
+        >
+          Apagar
+        </button>
+      </div>
+    </li>
+  </ul>
+  <p *ngIf="!threads || threads.length === 0">
+    No threads available for this subject.
+  </p>
+
+  <div *ngIf="canCreateThread" class="create-thread-container">
+    <h3>Create a new thread</h3>
+    <form [formGroup]="threadForm" (ngSubmit)="createThread(threadForm.value)">
+      <div>
+        <mat-form-field>
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" />
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field>
+          <mat-label>Content</mat-label>
+          <textarea matInput formControlName="content"></textarea>
+        </mat-form-field>
+      </div>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="threadForm.invalid"
+        class="align-center"
+      >
+        Create new thread
+      </button>
+    </form>
+  </div>
+</div>
+
+<button mat-raised-button (click)="goBack()">Back</button>

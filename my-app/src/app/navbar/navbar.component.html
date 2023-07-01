@@ -1,26 +1,31 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">App Name</a>
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item" *ngIf="currentUser && currentUser.role === 'admin'">
-          <a class="nav-link" routerLink="/admin">Admin</a>
-        </li>
-        <li class="nav-item" *ngIf="currentUser && currentUser.role === 'moderator'">
-          <a class="nav-link" routerLink="/moderator">Moderator</a>
-        </li>
-        <li class="nav-item" *ngIf="currentUser && currentUser.role === 'user'">
-          <a class="nav-link" routerLink="/user">User</a>
-        </li>
-        <li class="nav-item" *ngIf="!currentUser">
-          <a class="nav-link" routerLink="/login">Login</a>
-        </li>
-        <li class="nav-item" *ngIf="!currentUser">
-          <a class="nav-link" routerLink="/register">Register</a>
-        </li>
-        <li class="nav-item" *ngIf="currentUser">
-          <a class="nav-link" (click)="logout()">Logout</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-  
+  <div class="container-fluid">
+    <button mat-button class="navbar-brand" routerLink="/">Forum</button>
+
+    <button mat-button class="nav-link" routerLink="/threads" aria-current="page">Home</button>
+
+    <form class="d-flex ml-auto">
+      <mat-form-field appearance="fill">
+        <mat-icon matPrefix>search</mat-icon>
+        <mat-label>Search</mat-label>
+        <input matInput type="search" placeholder="Search" aria-label="Search">
+      </mat-form-field>
+      <button mat-icon-button color="primary" type="submit">
+        <mat-icon>search</mat-icon>
+      </button>
+    </form>
+
+    <!-- Exibe quando o usuário não está logado -->
+    <ng-container *ngIf="!isLoggedIn; else loggedInTemplate">
+      <button mat-button class="nav-link" routerLink="/login">Login</button>
+      <button mat-button class="nav-link" routerLink="/register">Register</button>
+    </ng-container>
+
+    <!-- Exibe quando o usuário está logado -->
+    <ng-template #loggedInTemplate>
+      <span class="navbar-text mr-2">Welcome, {{username}}!</span>
+      <button mat-button color="warn" type="button" (click)="logout()">Logout</button>
+    </ng-template>
+  </div>
+</nav>
+

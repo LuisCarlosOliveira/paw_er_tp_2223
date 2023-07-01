@@ -6,6 +6,7 @@ var path = require("path");
 var threadController = {};
 
 // Mostra uma thread por id
+// Mostra uma thread por id
 threadController.show = function (req, res) {
   Thread.findById(req.params.id)
     .populate("posts")
@@ -15,13 +16,20 @@ threadController.show = function (req, res) {
       if (err) {
         console.log("Erro ao ler thread");
         res.status(500).send(err);
-      } else if (thread.hidden) {
-        res.status(404).send("Thread não encontrada");
       } else {
-        res.status(200).send(thread);
+        if (thread.hidden) {
+          if (req.userId !== thread.creator && req.userRole !== "admin" && req.userRole !== "moderator") {
+            res.status(403).send("Insufficient permissions.");
+          } else {
+            res.status(200).send(thread);
+          }
+        } else {
+          res.status(200).send(thread);
+        }
       }
     });
 };
+
 
 // mostra todos threads
 // mostra todos threads
@@ -102,7 +110,7 @@ threadController.delete = function (req, res) {
   });
 };
 
-// ocultar 1 thread
+// toggle hide a thread
 threadController.hide = function (req, res) {
   Thread.findById(req.params.id, function (err, thread) {
     if (err) {
@@ -114,7 +122,7 @@ threadController.hide = function (req, res) {
       } else {
         Thread.findByIdAndUpdate(
           req.params.id,
-          { hidden: true },
+          { hidden: !thread.hidden }, // alternar o estado hidden
           { new: true },
           (err, updatedThread) => {
             if (err) {
@@ -129,6 +137,7 @@ threadController.hide = function (req, res) {
     }
   });
 };
+
 
 // edita uma thread
 threadController.edit = function (req, res) {
@@ -176,5 +185,22 @@ threadController.edit = function (req, res) {
     }
   });
 };
+
+threadController.showBySubject = function (req, res) {
+  const subjectId = req.params.subjectId;
+  Thread.find({ subject: subjectId})
+    .select("-attachments.file")
+    .exec((err, threads) => {
+      if (err) {
+        console.log("Erro ao ler threads");
+        res.status(500).send(err);
+      } else if (!threads.length) {
+        res.status(404).send("Threads não encontradas para este subject");
+      } else {
+        res.status(200).send(threads);
+      }
+    });
+};
+
 
 module.exports = threadController;

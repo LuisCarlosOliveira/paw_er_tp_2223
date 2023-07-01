@@ -243,4 +243,34 @@ router.post('/:id/downvote',
     postController.downvotePost
 );
 
+/**
+ * @swagger
+ * /posts/{id}/toggleHide:
+ *   post:
+ *     security:
+ *       - BearerAuth: []
+ *     description: Use to toggle hide status of a post
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: A successful response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
+ */
+router.post('/:id/toggleHide',
+    authController.verifyToken,
+    authController.checkUserRole(['user', 'moderator', 'admin']),
+    postController.toggleHidePost
+);
+
+
+router.get('/thread/:threadId/', postController.showByThread);
+
 module.exports = router;

@@ -1,2 +1,14 @@
-<h1>{{course.name}}</h1>
+<div *ngIf="course">
+  <h2>{{ course.name }}</h2>
+
+  <h3>Subjects</h3>
+  <ul *ngIf="subjects && subjects.length > 0">
+    <li *ngFor="let subject of subjects">
+      <a   [routerLink]="['/subject', subject._id]">{{ subject.name }}</a>
+    </li>
+  </ul>
+  <p *ngIf="!subjects || subjects.length === 0">No subjects available for this course.</p>
+</div>
+<button mat-raised-button (click)="goBack()">Voltar</button>
+
 

@@ -1,0 +1,19 @@
+.thread-item {
+    list-style-type: none;
+  }
+  
+  .thread-box {
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
+    margin-bottom: 10px;
+  }
+  
+
+.create-thread-container {
+    display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  }
+  
