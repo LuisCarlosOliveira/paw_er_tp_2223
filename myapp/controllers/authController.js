@@ -13,6 +13,10 @@ authController.login = function(req, res, next) {
 
     User.findOne({username: username})
         .then(function(user){
+            if(user.isBlocked) {
+                return res.status(403).send('Your account is blocked.');
+            }
+
             user.comparePassword(password, function(err, isMatch) {
                 if (err) throw err;
                 
@@ -29,6 +33,7 @@ authController.login = function(req, res, next) {
             next(err);
         });
 };
+
 
 authController.register = function(req, res, next) {
     var user = new User(req.body);

@@ -2,7 +2,8 @@
   <div class="container-fluid">
     <button mat-button class="navbar-brand" routerLink="/">Forum</button>
 
-    <button mat-button class="nav-link" routerLink="/threads" aria-current="page">Home</button>
+    <button *ngIf="role === 'admin'" mat-button class="nav-link" routerLink="/users">Users</button>
+
 
     <form class="d-flex ml-auto">
       <mat-form-field appearance="fill">
