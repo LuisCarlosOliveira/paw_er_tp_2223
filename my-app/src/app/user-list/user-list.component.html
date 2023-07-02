@@ -1,0 +1,42 @@
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+ 
+    <ng-container matColumnDef="username">
+      <th mat-header-cell *matHeaderCellDef>Username</th>
+      <td mat-cell *matCellDef="let user">{{ user.username }}</td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef>Role</th>
+      <td mat-cell *matCellDef="let user">{{ user.role }}</td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="isBlocked">
+      <th mat-header-cell *matHeaderCellDef>Blocked?</th>
+      <td mat-cell *matCellDef="let user">{{ user.isBlocked }}</td>
+    </ng-container>
+
+ 
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let user">
+        <button mat-raised-button (click)="blockUser(user)">Block</button>
+        <button mat-raised-button (click)="unblockUser(user)">Unblock</button>
+        <button mat-raised-button (click)="deleteUser(user)">Delete</button>
+        <mat-form-field>
+          <mat-label>Change Role</mat-label>
+          <mat-select (selectionChange)="changeRole(user, $event.value)">
+            <mat-option value="admin">Make Admin</mat-option>
+            <mat-option value="moderator">Make Moderator</mat-option>
+            <mat-option value="user">Make User</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

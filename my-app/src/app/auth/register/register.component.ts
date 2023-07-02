@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router'; 
 
 @Component({
   selector: 'app-register',
@@ -11,7 +12,7 @@ export class RegisterComponent implements OnInit {
   username: string = '';
   password: string = '';
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { } 
 
   ngOnInit(): void {
   }
@@ -22,16 +23,19 @@ export class RegisterComponent implements OnInit {
         // login após o registro bem-sucedido
         this.authService.login(this.username, this.password).subscribe(
           success => {
-            // redirecionar para a página principal, adicionar seu próprio código aqui
+            this.router.navigateByUrl('/courses'); // redireciona para a página inicial
+          },
+          error => {
+            console.error('Login Failed!', error);
+            alert('Login Failed');
           }
         );
       },
       error => {
-        console.error('Erro ao se registrar!', error);
+        console.error('Register failed', error);
+        alert('Register failed');
       }
     );
   }
 
 }
-
-

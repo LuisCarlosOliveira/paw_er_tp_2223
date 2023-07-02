@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';  
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,7 @@ export class LoginComponent implements OnInit {
   username: string = '';
   password: string = '';
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }  
 
   ngOnInit(): void {
   }
@@ -19,12 +20,13 @@ export class LoginComponent implements OnInit {
   login(): void {
     this.authService.login(this.username, this.password).subscribe(
       success => {
-        // redirecionar para a página principal, adicionar seu próprio código aqui
+        this.router.navigateByUrl('/courses');  
       },
       error => {
-        console.error('Erro ao fazer login!', error);
+        console.error('Login Failed', error);
+        alert('Login Failed');  
       }
     );
   }
-
 }
+

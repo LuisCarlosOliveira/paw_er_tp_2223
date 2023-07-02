@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-subject-details',
@@ -104,10 +105,18 @@ export class SubjectDetailsComponent {
 
   deleteThread(thread: Thread): void {
     if (thread._id) {
-      this.threadService.deleteThread(thread._id).subscribe(
-        () => this.getThreads(),
-        error => console.error(error)
-      );
+      this.threadService.deleteThread(thread._id)
+        .subscribe(
+          () => {
+            if (this.subject._id) {
+              this.threadService.getThreadsBySubjectId(this.subject._id)
+                .subscribe(threads => this.threads = threads);
+            } else {
+              console.error('Subject ID is not defined');
+            }
+          },
+          error => console.error(error)
+        );
     }
   }
 

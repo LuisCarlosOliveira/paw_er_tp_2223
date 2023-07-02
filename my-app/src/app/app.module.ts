@@ -8,12 +8,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
+
 
 import { AppComponent } from './app.component';
 
 import { AuthService } from './services/auth.service';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
+
+import { UserService } from './services/user.service';
+import { UserListComponent } from './user-list/user-list.component';
 
 import { NavbarComponent } from './navbar/navbar.component';
 
@@ -76,7 +82,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AdminDashboardComponent,
     CourseCreateComponent,
     CourseUpdateComponent,
-    SubjectCreateComponent
+    SubjectCreateComponent,
+    UserListComponent
   ],
   imports: [
     BrowserModule,
@@ -90,7 +97,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatInputModule,
     MatFormFieldModule,
     MatIconModule,
-    BrowserAnimationsModule
+    MatTableModule,
+    BrowserAnimationsModule,
+    MatSelectModule
   ],
   providers: [
     AuthService,
@@ -98,7 +107,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     SubjectService,
     ThreadService,
     PostService,
-    //AdminService,
+    UserService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]

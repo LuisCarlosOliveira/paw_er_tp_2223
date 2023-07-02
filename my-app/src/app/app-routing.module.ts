@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuardService } from './services/auth-guard.service';
+import { AuthGuardService } from './guards/auth-guard.service';
+import { AdminGuard } from './guards/admin.guard';
+import { UserListComponent } from './user-list/user-list.component';
 
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
@@ -30,10 +32,11 @@ import { SearchComponent } from './search/search.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/courses', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'users', component: UserListComponent, canActivate: [AdminGuard] },
 
   { path: 'threads', component: ThreadListComponent },
   { path: 'thread/:id', component: ThreadDetailComponent},
@@ -58,7 +61,7 @@ const routes: Routes = [
 
   { path: 'admin', component: AdminDashboardComponent, canActivate: [AuthGuardService] },
 
-  { path: '**', redirectTo: '/dashboard' }
+  { path: '**', redirectTo: '/courses' }
 ];
 
 @NgModule({

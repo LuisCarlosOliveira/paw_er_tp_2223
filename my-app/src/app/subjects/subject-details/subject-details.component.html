@@ -1,26 +1,31 @@
+<div class = "margin">
 <div *ngIf="subject">
   <h2>{{ subject.name }}</h2>
 
   <ul *ngIf="threads && threads.length > 0" class="threads-list">
     <li *ngFor="let thread of threads" class="thread-item" matRipple>
-      <div class="thread-box">
-        <a mat-button (click)="navigateToThread(thread)">{{ thread.title }}</a>
+      <ng-container *ngIf="!(thread.hidden && !isLoggedIn)">
+        <div class="thread-box">
+          <a mat-button (click)="navigateToThread(thread)">{{
+            thread.title
+          }}</a>
 
-        <button
-          *ngIf="canHideThread(thread)"
-          mat-button
-          (click)="thread._id && hideThread(thread)"
-        >
-          {{ thread.hidden ? "Show" : "Hide" }}
-        </button>
-        <button
-          *ngIf="canDeleteThread(thread)"
-          mat-button
-          (click)="thread._id && deleteThread(thread)"
-        >
-          Apagar
-        </button>
-      </div>
+          <button
+            *ngIf="canHideThread(thread)"
+            mat-button
+            (click)="thread._id && hideThread(thread)"
+          >
+            {{ thread.hidden ? "Show" : "Hide" }}
+          </button>
+          <button
+            *ngIf="canDeleteThread(thread)"
+            mat-button
+            (click)="thread._id && deleteThread(thread)"
+          >
+            Apagar
+          </button>
+        </div>
+      </ng-container>
     </li>
   </ul>
   <p *ngIf="!threads || threads.length === 0">
@@ -57,3 +62,4 @@
 </div>
 
 <button mat-raised-button (click)="goBack()">Back</button>
+</div>

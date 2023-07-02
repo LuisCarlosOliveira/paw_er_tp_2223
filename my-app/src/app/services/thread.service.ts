@@ -76,14 +76,21 @@ export class ThreadService {
         );
     }
 
-    deleteThread(id: string): Observable<Thread> {
+    deleteThread(id: string): Observable<{}> {
         const role = this.authService.getRole();
         if (role === 'admin' || role === 'moderator') {
-            return this.http.delete<Thread>(`${this.baseUrl}/${id}`, { headers: this.headers });
+            const options = { 
+                headers: this.headers, 
+                responseType: 'text' as 'json'
+            };
+    
+            return this.http.delete<{}>(`${this.baseUrl}/${id}`, options);
         } else {
             throw new Error('Unauthorized');
         }
     }
+    
+      
 
     getThreadsBySubjectId(id: string): Observable<Thread[]> {
         return this.http.get<Thread[]>(`${this.baseUrl}/subjects/${id}`, { headers: this.headers });
