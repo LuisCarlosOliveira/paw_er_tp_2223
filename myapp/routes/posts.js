@@ -114,7 +114,7 @@ router.post('/',
     authController.verifyToken, 
     authController.checkBlocked, 
     authController.checkUserRole(['user', 'moderator', 'admin']),
-    upload.single('attachment'), // Middleware do multer adicionado aqui
+    upload.single('attachment'),
     postController.create
 );
 
@@ -159,7 +159,7 @@ router.put('/:id',
     authController.verifyToken, 
     authController.checkBlocked, 
     authController.checkUserRole(['user', 'moderator', 'admin']), 
-    upload.single('attachment'), // multer middleware added here
+    upload.single('attachment'),
     postController.edit
 );
 

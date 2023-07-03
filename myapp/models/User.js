@@ -2,32 +2,12 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const UserSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        unique: true,
-        required: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    role: {
-        type: String,
-        enum: ['user', 'moderator', 'admin'],
-        default: 'user'
-    },
-    isBlocked: {
-        type: Boolean,
-        default: false
-    },
-    deletedPosts: {
-        type: Number,
-        default: 0
-    },
-    deletedThreads: {
-        type: Number,
-        default: 0
-    },
+    username: { type: String, unique: true, required: true },
+    password: { type: String, required: true },
+    role: { type: String, enum: ['user', 'moderator', 'admin'], default: 'user' },
+    isBlocked: { type: Boolean, default: false },
+    deletedPosts: { type: Number, default: 0 },
+    deletedThreads: { type: Number, default: 0 },
 });
 
 // hash password before saving
