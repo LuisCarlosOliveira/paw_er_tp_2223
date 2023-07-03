@@ -39,7 +39,6 @@ import { CreateThreadComponent } from './threads/create-thread/create-thread.com
 import { EditThreadComponent } from './threads/edit-thread/edit-thread.component';
 
 import { PostService } from './services/post.service';
-import { PostListComponent } from './posts/post-list/post-list.component';
 import { EditPostComponent } from './posts/edit-post/edit-post.component';
 
 import { SearchComponent } from './search/search.component';
@@ -63,7 +62,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ThreadDetailComponent,
     CreateThreadComponent,
     EditThreadComponent,
-    PostListComponent,
     EditPostComponent,
     SearchComponent,
     UserListComponent

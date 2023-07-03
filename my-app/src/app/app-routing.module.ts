@@ -12,7 +12,6 @@ import { ThreadDetailComponent } from './threads/thread-detail/thread-detail.com
 import { CreateThreadComponent } from './threads/create-thread/create-thread.component';
 import { EditThreadComponent } from './threads/edit-thread/edit-thread.component';
 
-import { PostListComponent } from './posts/post-list/post-list.component';
 import { EditPostComponent } from './posts/edit-post/edit-post.component';
 
 import { CourseListComponent } from './courses/course-list/course-list.component';
@@ -34,7 +33,6 @@ const routes: Routes = [
   { path: 'create-thread', component: CreateThreadComponent, canActivate: [AuthGuardService] },
   { path: 'thread/:id/edit', component: EditThreadComponent, canActivate: [AuthGuardService] },
 
-  { path: 'posts', component: PostListComponent },
   { path: 'post/:id/edit', component: EditPostComponent, canActivate: [AuthGuardService] },
 
   { path: 'courses', component: CourseListComponent },

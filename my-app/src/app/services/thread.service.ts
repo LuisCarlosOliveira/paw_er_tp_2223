@@ -30,10 +30,8 @@ export class ThreadService {
         return this.http.get<Thread[]>(this.baseUrl, { headers: this.headers })
             .pipe(catchError((err: HttpErrorResponse) => {
                 if (err.status === 403) {
-                    // Lidar com a situação em que o usuário não tem permissão para ver o thread
-                    console.error("Acesso negado ao thread.");
+                    console.error("Unauthorized");
                 }
-                // Relançar o erro para que possa ser tratado por qualquer outra parte do código que esteja inscrita nesse Observable
                 return throwError(err);
             }));
     }
@@ -42,10 +40,8 @@ export class ThreadService {
         return this.http.get<Thread>(`${this.baseUrl}/${id}`, { headers: this.headers })
             .pipe(catchError((err: HttpErrorResponse) => {
                 if (err.status === 403) {
-                    // Lidar com a situação em que o usuário não tem permissão para ver o thread
-                    console.error("Acesso negado ao thread.");
+                    console.error("Unauthorized");
                 }
-                // Relançar o erro para que possa ser tratado por qualquer outra parte do código que esteja inscrita nesse Observable
                 return throwError(err);
             }));
     }
