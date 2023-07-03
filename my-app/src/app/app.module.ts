@@ -23,8 +23,6 @@ import { UserListComponent } from './user-list/user-list.component';
 
 import { NavbarComponent } from './navbar/navbar.component';
 
-import { DashboardComponent } from './dashboard/dashboard.component';
-
 import { CourseService } from './services/course.service';
 import { CourseListComponent } from './courses/course-list/course-list.component';
 import { CourseDetailComponent } from './courses/course-details/course-details.component';
@@ -48,15 +46,9 @@ import { EditPostComponent } from './posts/edit-post/edit-post.component';
 
 import { SearchComponent } from './search/search.component';
 
-//import { AdminService } from './admin/admin.service';
-import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
-
 import { JwtInterceptor } from './auth/jwt.interceptor';
 
 import { AppRoutingModule } from './app-routing.module';
-import { CourseCreateComponent } from './courses/course-create/course-create.component';
-import { CourseUpdateComponent } from './courses/course-update/course-update.component';
-import { SubjectCreateComponent } from './subjects/subject-create/subject-create.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -65,7 +57,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     LoginComponent,
     RegisterComponent,
     NavbarComponent,
-    DashboardComponent,
     CourseListComponent,
     CourseDetailComponent,
     SubjectListComponent,
@@ -79,10 +70,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CreatePostComponent,
     EditPostComponent,
     SearchComponent,
-    AdminDashboardComponent,
-    CourseCreateComponent,
-    CourseUpdateComponent,
-    SubjectCreateComponent,
     UserListComponent
   ],
   imports: [

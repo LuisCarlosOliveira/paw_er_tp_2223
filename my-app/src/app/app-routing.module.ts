@@ -6,7 +6,6 @@ import { UserListComponent } from './user-list/user-list.component';
 
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { ThreadListComponent } from './threads/thread-list/thread-list.component';
 import { ThreadDetailComponent } from './threads/thread-detail/thread-detail.component';
@@ -20,20 +19,14 @@ import { EditPostComponent } from './posts/edit-post/edit-post.component';
 
 import { CourseListComponent } from './courses/course-list/course-list.component';
 import { CourseDetailComponent } from './courses/course-details/course-details.component';
-import { CourseCreateComponent  } from './courses/course-create/course-create.component';
-import { CourseUpdateComponent   } from './courses/course-update/course-update.component';
 
 import { SubjectListComponent } from './subjects/subject-list/subject-list.component';
 import { SubjectDetailsComponent } from './subjects/subject-details/subject-details.component';
-import { SubjectCreateComponent } from './subjects/subject-create/subject-create.component';
 
 import { SearchComponent } from './search/search.component';
 
-import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
-
 const routes: Routes = [
   { path: '', redirectTo: '/courses', pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'users', component: UserListComponent, canActivate: [AdminGuard] },
@@ -50,16 +43,11 @@ const routes: Routes = [
 
   { path: 'courses', component: CourseListComponent },
   { path: 'courses/:id', component: CourseDetailComponent},
-  { path: 'courses/create', component: CourseCreateComponent, canActivate: [AuthGuardService] },
-  { path: 'courses/update/:id', component: CourseUpdateComponent },
 
-  { path: 'subjects/create', component: SubjectCreateComponent , canActivate: [AuthGuardService] },
   { path: 'subjects', component: SubjectListComponent },
   { path: 'subject/:id', component: SubjectDetailsComponent },
 
   { path: 'search', component: SearchComponent },
-
-  { path: 'admin', component: AdminDashboardComponent, canActivate: [AuthGuardService] },
 
   { path: '**', redirectTo: '/courses' }
 ];
