@@ -20,10 +20,9 @@ export class RegisterComponent implements OnInit {
   register(): void {
     this.authService.register(this.username, this.password).subscribe(
       success => {
-        // login após o registro bem-sucedido
         this.authService.login(this.username, this.password).subscribe(
           success => {
-            this.router.navigateByUrl('/courses'); // redireciona para a página inicial
+            this.router.navigateByUrl('/courses'); 
           },
           error => {
             console.error('Login Failed!', error);

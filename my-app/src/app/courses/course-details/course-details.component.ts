@@ -33,8 +33,6 @@ export class CourseDetailComponent implements OnInit {
     if (id) {
       this.courseService.getCourseById(id).subscribe(course => this.course = course);
     } else {
-      // Handle the case where id is null
-      //TO DO: redirect to an error page or show a message to the user
 
     }
   }
@@ -44,8 +42,7 @@ export class CourseDetailComponent implements OnInit {
     if (id) {
       this.subjectService.getSubjectsByCourseId(id).subscribe(subjects => this.subjects = subjects);
     } else {
-      // Handle the case where id is null
-      // TO DO: redirect to an error page or show a message to the user
+    
     }
   }
 
