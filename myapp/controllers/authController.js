@@ -40,7 +40,7 @@ authController.register = function(req, res, next) {
 
     user.save((err, savedUser) => {
         if (err) {
-            console.log('Erro ao gravar');
+            console.log('Error recording');
             res.status(500).send(err);
         } else {
             var token = jwt.sign({ id: savedUser._id, role: savedUser.role }, config.secret, {
@@ -80,7 +80,7 @@ authController.checkUserRole = function(roles) {
     }
 }
 
-//verificar user bloqueado
+//check blocked user
 authController.checkBlocked = function(req, res, next) {
     let token = req.headers['authorization'];
     // Remove 'Bearer ' from string

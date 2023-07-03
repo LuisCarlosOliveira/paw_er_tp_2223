@@ -1,54 +1,67 @@
-const express = require('express');
-const Post = require('../models/Post');
+const express = require("express");
+const Post = require("../models/Post");
+const Thread = require("../models/Thread");
 
-// Controlador de pesquisa
 const searchController = {};
 
-// Método de pesquisa
 searchController.searchPosts = (req, res) => {
-    let { term, type, course, subject, page, limit } = req.query;
-    let query = {};
+  let { term, type } = req.query;
+  let query = {};
 
-    page = parseInt(page) || 1;
-    limit = parseInt(limit) || 25;
+  switch (type) {
+    case "title":
+      // allow partial searches on the title
+      query.title = new RegExp(term, "i");
+      break;
+    case "tags":
+      query.tags = new RegExp(term, "i");
+      break;
+    case "images":
+      // Check if the thread has images or no
+      query.hasImages = term === "true";
+      break;
+    default:
+      return res.status(400).json({ error: "Invalid search type" });
+  }
 
-    const skip = (page - 1) * limit;
-
-    // Verifica se o curso e a unidade curricular estão presentes e adiciona-os à consulta.
-    if(course) {
-        query.course = course;
-    }
-
-    if(subject) {
-        query.subject = subject;
-    }
-
-    switch(type) {
-        case 'title':
-            // Usa uma expressão regular para permitir pesquisas parciais no título
-            query.title = new RegExp(term, 'i');
-            break;
-        case 'tags':
-            // Usa uma expressão regular para permitir pesquisas parciais nas tags
-            query.tags = new RegExp(term, 'i');
-            break;
-        case 'images':
-            query.hasImages = term === 'true';
-            break;
-        default:
-            return res.status(400).json({ error: 'Invalid search type' });
-    }
-
-    Post.find(query)
-        .skip(skip)
-        .limit(limit)
-        .then(posts => {
-            res.json(posts);
-        })
-        .catch(err => {
-            res.status(500).json({ error: err.message });
-        });
+  Post.find(query)
+    .then((posts) => {
+      res.json(posts);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
 };
 
+searchController.searchThreads = (req, res) => {
+  let { term, type } = req.query;
+  let query = {};
+
+  switch (type) {
+    case "title":
+      //allow partial searches on the title
+      query.title = new RegExp(term, "i");
+      break;
+    case "tags":
+      query.tags = new RegExp(term, "i");
+      break;
+    case "images":
+      // Check if the thread has images or no
+      query.attachments =
+        term === "true" ? { $not: { $size: 0 } } : { $size: 0 };
+      break;
+    default:
+      return res.status(400).json({ error: "Invalid search type" });
+  }
+
+  Thread.find(query)
+    .select("-attachments.file")
+    .then((threads) => {
+      res.json(threads);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
+};
 
 module.exports = searchController;

@@ -5,11 +5,11 @@ const config = require("../jwt_secret/config");
 
 const userController = {};
 
-// mostra todos os utilizadores
+// show all users
 userController.showAll = function (req, res) {
   User.find({}).exec((err, users) => {
     if (err) {
-      console.log("Erro a ler");
+      console.log("Error Reading");
       res.status(500).send(err);
     } else {
       res.json(users);
@@ -17,11 +17,11 @@ userController.showAll = function (req, res) {
   });
 };
 
-// mostra um utilizador por ID
+// show user by id
 userController.show = function (req, res) {
   User.findById(req.params.id).exec((err, user) => {
     if (err) {
-      console.log("Erro a ler");
+      console.log("Error reading");
       res.status(500).send(err);
     } else {
       res.json(user);
@@ -29,14 +29,14 @@ userController.show = function (req, res) {
   });
 };
 
-// atualiza um utilizador
+// update user
 userController.update = function (req, res) {
   let token = req.headers["authorization"];
   token = token.slice(7, token.length);
   const decoded = jwt.verify(token, config.secret);
   User.findOne({ _id: decoded.id }, function (err, user) {
     if (err) {
-      console.log("Erro a atualizar");
+      console.log("Error updating");
       res.status(500).send(err);
     } else {
       if (user.role == "admin") {
@@ -44,7 +44,7 @@ userController.update = function (req, res) {
         User.findByIdAndUpdate(req.params.id, req.body, { new: true }).exec(
           (err, updatedUser) => {
             if (err) {
-              console.log("Erro a atualizar");
+              console.log("Error updating");
               res.status(500).send(err);
             } else {
               res.json(updatedUser);
@@ -59,7 +59,7 @@ userController.update = function (req, res) {
         User.findByIdAndUpdate(req.params.id, req.body, { new: true }).exec(
           (err, updatedUser) => {
             if (err) {
-              console.log("Erro a atualizar");
+              console.log("Error updating");
               res.status(500).send(err);
             } else {
               res.json(updatedUser);
@@ -75,7 +75,7 @@ userController.update = function (req, res) {
           User.findByIdAndUpdate(req.params.id, req.body, { new: true }).exec(
             (err, updatedUser) => {
               if (err) {
-                console.log("Erro a atualizar");
+                console.log("Error updating");
                 res.status(500).send(err);
               } else {
                 res.json(updatedUser);
@@ -85,30 +85,30 @@ userController.update = function (req, res) {
         } else {
           res
             .status(403)
-            .send("Você não tem permissão para atualizar outros usuários.");
+            .send("Insufficient permissions.");
         }
       }
     }
   });
 };
 
-// apaga um utilizador
+// delete user
 userController.delete = function (req, res) {
   User.findByIdAndRemove(req.params.id).exec((err) => {
     if (err) {
-      console.log("Erro a apagar");
+      console.log("Error deleting");
       res.status(500).send(err);
     } else {
-      res.json({ message: "Utilizador apagado com sucesso!" });
+      res.json({ message: "user deleted with success!" });
     }
   });
 };
 
-// get utilizador pelo username
+// get utilizador by username
 userController.showByUsername = function (req, res) {
   User.findOne({ username: req.params.username }).exec((err, user) => {
     if (err) {
-      console.log("Erro a ler");
+      console.log("Error reading");
       res.status(500).send(err);
     } else {
       res.json(user);

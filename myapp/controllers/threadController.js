@@ -5,16 +5,13 @@ var path = require("path");
 
 var threadController = {};
 
-// Mostra uma thread por id
-// Mostra uma thread por id
+// Show thread by id
 threadController.show = function (req, res) {
   Thread.findById(req.params.id)
     .populate("posts")
-    .select("-attachments.file")
     .exec((err, thread) => {
-      // '.select('-attachments.file')' exclui o buffer da resposta
       if (err) {
-        console.log("Erro ao ler thread");
+        console.log("Error reading thread");
         res.status(500).send(err);
       } else {
         if (thread.hidden) {
@@ -31,23 +28,21 @@ threadController.show = function (req, res) {
 };
 
 
-// mostra todos threads
-// mostra todos threads
+
+// show all threads
 threadController.showAll = function (req, res) {
-    const page = parseInt(req.query.page) || 1; // Defina a página para 1 se nenhum número de página for fornecido
-    const limit = parseInt(req.query.limit) || 25; // Defina o limite para 25 se nenhum limite for fornecido
+    const page = parseInt(req.query.page) || 1; // Set page to 1 if no page nr given
+    const limit = parseInt(req.query.limit) || 25; // Set the limit to 25 if no limit  given
   
-    const skip = (page - 1) * limit; // Quantos threads devemos pular
+    const skip = (page - 1) * limit; //  posts nr to skip based on page nr and limit of results per page.
   
     Thread.find({ hidden: false })
-      .select("-attachments.file")
-      .sort({_id: -1}) // Ordenar por data de criação em ordem decrescente
+      .sort({_id: -1}) // Sort by creation date in descending order
       .skip(skip)
       .limit(limit)
       .exec((err, dbthreads) => {
-        // '.select('-attachments.file')' exclui o buffer da resposta
         if (err) {
-          console.log("Erro ao ler threads");
+          console.log("Errr Reading threads");
           res.status(500).send(err);
         } else {
           res.status(200).send(dbthreads);
@@ -56,26 +51,21 @@ threadController.showAll = function (req, res) {
   };
   
 
-// cria 1 thread como resposta a um post de um form
+// creates 1 thread in response to a form post
 threadController.create = function (req, res) {
   var thread = new Thread(req.body);
   thread.creator = req.userId;
-  // verifica se existe um arquivo
   if (req.file) {
-    // lê o arquivo e converte em Buffer
     let fileBuffer = fs.readFileSync(req.file.path);
     thread.attachments.push({
       name: req.file.originalname,
       file: fileBuffer,
     });
-    // remove o arquivo temporário
     fs.unlinkSync(req.file.path);
   }
-
-  // Salva a thread no banco de dados
   thread.save((err) => {
     if (err) {
-      console.log("Erro ao gravar thread");
+      console.log("Error saving thread");
       res.status(500).send(err);
     } else {
       res.status(200).send(thread);
@@ -83,11 +73,11 @@ threadController.create = function (req, res) {
   });
 };
 
-// apaga 1 thread
+// delete 1 thread
 threadController.delete = function (req, res) {
   Thread.findById(req.params.id, function (err, thread) {
     if (err) {
-      console.log("Erro ao encontrar thread");
+      console.log("Error finding thread");
       res.status(500).send(err);
     } else {
       if (
@@ -99,10 +89,10 @@ threadController.delete = function (req, res) {
       } else {
         Thread.remove({ _id: req.params.id }).exec((err) => {
           if (err) {
-            console.log("Erro ao apagar thread");
+            console.log("Error Deleting thread");
             res.status(500).send(err);
           } else {
-            res.status(200).send("Thread eliminada com sucesso");
+            res.status(200).send("Thread deleted with success");
           }
         });
       }
@@ -114,7 +104,7 @@ threadController.delete = function (req, res) {
 threadController.hide = function (req, res) {
   Thread.findById(req.params.id, function (err, thread) {
     if (err) {
-      console.log("Erro ao encontrar thread");
+      console.log("Error finding  thread");
       res.status(500).send(err);
     } else {
       if (thread.creator.toString() !== req.userId) {
@@ -122,11 +112,11 @@ threadController.hide = function (req, res) {
       } else {
         Thread.findByIdAndUpdate(
           req.params.id,
-          { hidden: !thread.hidden }, // alternar o estado hidden
+          { hidden: !thread.hidden }, 
           { new: true },
           (err, updatedThread) => {
             if (err) {
-              console.log("Erro ao ocultar thread");
+              console.log("Error hidden thread");
               res.status(500).send(err);
             } else {
               res.status(200).send(updatedThread);
@@ -139,11 +129,11 @@ threadController.hide = function (req, res) {
 };
 
 
-// edita uma thread
+// edit 1 thread
 threadController.edit = function (req, res) {
   Thread.findById(req.params.id, function (err, thread) {
     if (err) {
-      console.log("Erro ao encontrar thread");
+      console.log("Error finding thread");
       res.status(500).send(err);
     } else {
       if (
@@ -154,9 +144,7 @@ threadController.edit = function (req, res) {
         res.status(403).send("Insufficient permissions.");
       } else {
         var updateData = req.body;
-        // verifica se existe um arquivo
         if (req.file) {
-          // lê o arquivo e converte em Buffer
           var fileBuffer = fs.readFileSync(req.file.path);
           updateData.attachments = [
             {
@@ -164,7 +152,6 @@ threadController.edit = function (req, res) {
               file: fileBuffer,
             },
           ];
-          // remove o arquivo temporário
           fs.unlinkSync(req.file.path);
         }
 
@@ -174,7 +161,7 @@ threadController.edit = function (req, res) {
           { new: true },
           function (err, updatedThread) {
             if (err) {
-              console.log("Erro ao editar thread");
+              console.log("Error editing thread");
               res.status(500).send(err);
             } else {
               res.status(200).send(updatedThread);
@@ -189,13 +176,12 @@ threadController.edit = function (req, res) {
 threadController.showBySubject = function (req, res) {
   const subjectId = req.params.subjectId;
   Thread.find({ subject: subjectId})
-    .select("-attachments.file")
     .exec((err, threads) => {
       if (err) {
-        console.log("Erro ao ler threads");
+        console.log("Error reading threads");
         res.status(500).send(err);
       } else if (!threads.length) {
-        res.status(404).send("Threads não encontradas para este subject");
+        res.status(404).send("Threads not found for this subject");
       } else {
         res.status(200).send(threads);
       }

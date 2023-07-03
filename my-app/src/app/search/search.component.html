@@ -1,1 +1,30 @@
-<p>search works!</p>
+<div class="search">
+    <h1>Search</h1>
+
+    <mat-form-field>
+        <mat-label>Search term</mat-label>
+        <input matInput [(ngModel)]="searchTerm" placeholder="Search term" />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="searchPosts()">Search Posts</button>
+    <button mat-raised-button color="primary" (click)="searchThreads()">Search Threads</button>
+
+    <h2>Posts Results</h2>
+    <div *ngIf="postResults.length === 0">No posts available for this term.</div>
+    <mat-list *ngIf="postResults.length > 0">
+        <mat-list-item *ngFor="let post of postResults">
+            <!-- Display your post data here -->
+            <p>{{ post.content }}</p>
+        </mat-list-item>
+    </mat-list>
+
+    <h2>Threads Results</h2>
+    <div *ngIf="threadResults.length === 0">No threads available for this term.</div>
+    <mat-list *ngIf="threadResults.length > 0">
+        <mat-list-item *ngFor="let thread of threadResults">
+            <!-- Display your thread data here -->
+            <p>{{ thread.title }}</p>
+        </mat-list-item>
+    </mat-list>
+</div>
+
