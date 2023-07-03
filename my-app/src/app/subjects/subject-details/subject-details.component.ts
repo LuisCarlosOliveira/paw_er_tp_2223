@@ -35,7 +35,8 @@ export class SubjectDetailsComponent {
     this.getThreads();
     this.threadForm = this.fb.group({
       title: ['', Validators.required],
-      content: ['', Validators.required]
+      content: ['', Validators.required],
+      tags: [[]]
     });
   }
 
@@ -78,7 +79,8 @@ export class SubjectDetailsComponent {
     }
 
     newThread.subject = this.subject._id;
-
+    newThread.tags = this.threadForm.value.tags;
+    
     this.threadService.createThread(newThread)
       .subscribe(
         (thread: Thread) => {

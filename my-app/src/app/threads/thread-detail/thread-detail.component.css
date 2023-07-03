@@ -2,59 +2,81 @@
   text-align: center;
 }
 
+.thread-box {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.thread-header-box {
+  background-color: #f0f0f0;
+  padding: 10px;
+}
+
 .thread-header {
-  margin-left: 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.thread-info {
+  display: flex;
+  gap: 10px;
+}
+
+.thread-attachments,
+.thread-tags,
+.thread-creator {
+  margin: 0;
 }
 
 .thread-content {
   margin-top: 10px;
-  margin-left: 5%;
 }
 
 .post-item {
-    margin-bottom: 0.5%; 
-    list-style-type: none;
-  }
-  
-  .post-box {
-    border: 1px solid #ccc;
-    padding: 10px;
-    background-color: #f9f9f9;
-  }
-  
-  .post-box.hidden-post {
-    background-color: #ddd;
-  }
+  margin-bottom: 0.5%;
+  list-style-type: none;
+}
 
-  .voting-section {
-    display: flex;
-    align-items: center;
-  }
-  
-  .add-post-section {
-    margin-top: 20px;
-    text-align: center;
-  }
-  
-  button.mat-icon-button {
-    margin-right: 5px;
-  }
-  
-  button.mat-icon-button.upvote-button {
-    color: #666;
-  }
-  
-  button.mat-icon-button.downvote-button {
-    color: #666;
-  }
-  
-  button.mat-raised-button.edit-button {
-    margin-top: 10px;
-  }
+.post-box {
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f9f9f9;
+}
 
-  .thread-details > button.mat-raised-button.goBack-button {
-    margin-top: 10px;
-    margin-left: 5%;
-  }
-  
+.post-box.hidden-post {
+  background-color: #ddd;
+}
+
+.voting-section {
+  display: flex;
+  align-items: center;
+}
+
+.add-post-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+button.mat-icon-button {
+  margin-right: 5px;
+}
+
+button.mat-icon-button.upvote-button {
+  color: #666;
+}
+
+button.mat-icon-button.downvote-button {
+  color: #666;
+}
+
+button.mat-raised-button.edit-button {
+  margin-top: 10px;
+}
+
+.thread-details > button.mat-raised-button.goBack-button {
+  margin-top: 10px;
+  margin-left: 5%;
+}
+
   
