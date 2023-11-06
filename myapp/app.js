@@ -61,7 +61,7 @@ app.use(cors({
 //  MongoDB connection
 //useNewUrlParser: new MongoDB driver connection string parser
 //useUnifiedTopology: new MongoDB driver connection management mechanism. avoid deprecation warnings
-mongoose.connect('mongodb+srv://8190370:qCSKHX2BQ9@pawtper.kgjfj9w.mongodb.net/your-database-name?retryWrites=true&w=majority', 
+mongoose.connect('mongodb+srv://8190370:_INSERT_PASSWORD_@pawtper.kgjfj9w.mongodb.net/your-database-name?retryWrites=true&w=majority', 
   { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Conexão com o MongoDB estabelecida com sucesso!'))
   .catch(error => console.error('Erro ao estabelecer conexão com o MongoDB: ', error));
